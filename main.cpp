@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-#include <iostream>
-using namespace std;
-=======
 #include<iostream>
 #include<fstream>
 #include<string>
@@ -11,7 +7,6 @@ using namespace std;
 #include "semantic.h"
 #include "codegen.h"
 #include "error.h"
->>>>>>> 74bb60c (tasks.json, test case 1, testing command, compiler_test executable, settings.json, file read testing in main file.)
 
 using namespace std;
 
@@ -29,10 +24,11 @@ int main(int argc, char* argv[]){
     return 1;
   }
 
+  //debugging
   string line;
   while (getline(file, line)) {
       cout << line << endl;
   }
-  //ifstream file()
+
   return 0;
 }
