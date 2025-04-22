@@ -1,0 +1,6 @@
+Compile
+    clang++ -std=c++17 main.cpp -o compiler_test
+Run code
+    ./compiler_test test_case_1.txt
+    ./compiler_test test_case_2.txt
+    ./compiler_test test_case_3.txt
