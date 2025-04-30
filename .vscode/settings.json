@@ -1,5 +1,21 @@
 {
     "files.associations": {
-        "istream": "cpp"
+        "istream": "cpp",
+        "__bit_reference": "cpp",
+        "__node_handle": "cpp",
+        "bitset": "cpp",
+        "deque": "cpp",
+        "limits": "cpp",
+        "optional": "cpp",
+        "ratio": "cpp",
+        "regex": "cpp",
+        "system_error": "cpp",
+        "tuple": "cpp",
+        "type_traits": "cpp",
+        "vector": "cpp",
+        "__memory": "cpp",
+        "chrono": "cpp",
+        "filesystem": "cpp",
+        "iosfwd": "cpp"
     }
 }

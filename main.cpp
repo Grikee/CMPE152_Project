@@ -13,7 +13,7 @@
 using namespace std;
 
 //1
-//token_type_to_string, lexer.cpp test
+//token_type_to_string, lexer_test
 string token_type_to_string(TokenType type){
   switch (type) {
     case KEYWORD: return "KEYWORD";
@@ -45,14 +45,22 @@ int main(int argc, char* argv[]){
   string source_code = buffer.str();
   file.close();
 
+  //1
   Lexer lexer(source_code);
   vector<Token> tokens = lexer.tokenize();
 
+  //Token types, lexer_test
+  //Not included included in final product, just for testing
   for (const auto& token : tokens){
     cout << "Type: " << token_type_to_string(token.type)
       << ", Value: '" << token.value
       << "', Line: " << token.line_number << endl;
   }
+
+  //2
+  cout << "Parsing..." << endl;
+  Parser parser(tokens);
+  parser.parse();
 
   return 0;
 }
