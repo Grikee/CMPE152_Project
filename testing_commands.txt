@@ -1,5 +1,5 @@
 Compile
-    clang++ -std=c++17 main.cpp -o compiler_test
+    g++ -std=c++11 "list of cpp files" executable
 Run code
     ./compiler_test test_case_1.txt
     ./compiler_test test_case_2.txt

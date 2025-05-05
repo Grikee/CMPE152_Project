@@ -48,11 +48,14 @@ shared_ptr<ASTNode> Parser::parse() {
             string var_name = current_token.value;
             match(IDENTIFIER);
             match(OPERATOR, "=");
-            string literal_value = current_token.value;
-            match(NUMBER);
+            string expr_value;
+            while (current_token.type != PUNCTUATION || current_token.value != ";") {
+                expr_value += current_token.value + " ";
+                advance();
+            }
             match(PUNCTUATION, ";");
 
-            auto literal_node = make_shared<Literal>(literal_value);
+            auto literal_node = make_shared<Literal>(expr_value);
             auto var_decl_node = make_shared<VariableDeclaration>(var_name, literal_node);
             root->add_statement(var_decl_node);
         } else if (current_token.type == KEYWORD && current_token.value == "return") {
@@ -101,8 +104,6 @@ void Parser::parse_statement() {
 }
 
 
-
-
 void Parser::parse_function_definition() {
     cout << "Parsing function definition..." << endl;
     match(KEYWORD, "int");
@@ -125,18 +126,4 @@ void Parser::parse_return_statement() {
     match(PUNCTUATION, ";");     // End of the return statement
 }
 
-void Parser::parse_expression() {
-    match(IDENTIFIER);
-    match(OPERATOR);
-    match(NUMBER);
-    match(PUNCTUATION, ";");
-}
-
-void Parser::parse_block() {
-    match(PUNCTUATION, "{");
-    while (current_token.type != PUNCTUATION || current_token.value != "}") {
-        parse_statement();
-    }
-    match(PUNCTUATION, "}");
-}
 

@@ -22,10 +22,8 @@ private:
     void match(TokenType type, const string& value);
 
     void parse_statement();
-    void parse_expression();
     void parse_function_definition();
     void parse_return_statement();
-    void parse_block();
 };
 
 #endif // PARSER_H
