@@ -60,7 +60,9 @@ int main(int argc, char* argv[]){
   //2
   cout << "Parsing..." << endl;
   Parser parser(tokens);
-  parser.parse();
+  // parser.parse();
+  shared_ptr<ASTNode> ast = parser.parse();
+  ast->print();
 
   return 0;
 }

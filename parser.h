@@ -3,13 +3,15 @@
 
 #include <vector>
 #include "lexer.h"
+#include "ast.h"
 
 using namespace std;
 
 class Parser {
 public:
     Parser(vector<Token>& tokens);
-    void parse();
+    // void parse();
+    shared_ptr<ASTNode> parse();
 private:
     vector<Token> tokens;
     int current_token_idx;
@@ -27,3 +29,5 @@ private:
 };
 
 #endif // PARSER_H
+
+
