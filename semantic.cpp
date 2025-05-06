@@ -27,7 +27,7 @@ void SemanticAnalyzer::checkReturnType(const std::string& function, const std::s
     if (function == "main" && actualType != "int") {
         semanticErrors.push_back("Semantic error: Function 'main' must return int.");
     }
-    // You can add more rules for other functions here.
+
 }
 
 void SemanticAnalyzer::printSemanticErrors() const {
