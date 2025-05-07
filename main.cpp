@@ -65,5 +65,37 @@ int main(int argc, char* argv[]){
   //Debugging
   // ast->print();
 
+  // Semantic Analysis   
+  SemanticAnalyzer semanticAnalyzer;
+  semanticAnalyzer.declareVariable("main", "int");
+  if (auto func = dynamic_pointer_cast<Function>(ast)) {
+    for (const auto& stmt : func->body) {
+      if (auto decl = dynamic_pointer_cast<VariableDeclaration>(stmt)) {
+        semanticAnalyzer.declareVariable(decl->name, "int");
+      } else if (auto ret = dynamic_pointer_cast<ReturnStatement>(stmt)) {
+      if (!semanticAnalyzer.isDeclared(ret->return_var)) {
+        reportSemanticError(0, "Undeclared variable: " + ret->return_var);
+        }
+      }
+    }
+  }
+
+// Check for semantic errors
+if (semanticAnalyzer.hasErrors()) {
+  semanticAnalyzer.printSemanticErrors();
+  return 1;
+}
+
+// Code Generation
+cout << "Generating code..." << endl;
+generateCode(dynamic_pointer_cast<Function>(ast), "output.cpp");
+cout << "Code generated successfully in 'output.cpp'." << endl;
+
+// Print all errors if any
+if (hasErrors()) {
+  printAllErrors();
+  return 1;
+}
+
   return 0;
 }
