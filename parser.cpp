@@ -1,8 +1,22 @@
 #include "parser.h"
 #include "ast.h"
+#include "utils.h"
 #include <iostream>
+#include<unordered_set>
 
 using namespace std;
+
+
+string token_type_to_string(TokenType type) {  // <-- define the helper function
+    switch (type) {
+        case KEYWORD: return "KEYWORD";
+        case IDENTIFIER: return "IDENTIFIER";
+        case PUNCTUATION: return "PUNCTUATION";
+        case OPERATOR: return "OPERATOR";
+        case NUMBER: return "NUMBER";
+        default: return "UNKNOWN";
+    }
+}
 
 Parser::Parser(vector<Token>& tokens) : tokens(tokens), current_token_idx(0) {
     current_token = tokens[current_token_idx];
@@ -19,7 +33,12 @@ void Parser::match(TokenType type) {
     if (current_token.type == type) {
         advance();
     } else {
-        cerr << "Syntax error: Expected token type but got '" << current_token.value << "' on line " << current_token.line_number << endl;
+        // Missing semicolon
+        if (type == PUNCTUATION && current_token.value != ";") {
+            cerr << "Syntax error: Expected ';' but got '" << current_token.value << "' on line " << current_token.line_number << endl;
+        } else {
+            cerr << "Syntax error: Expected token type '" << token_type_to_string(type) << "' but got '" << current_token.value << "' on line " << current_token.line_number << endl;
+        }
         exit(1);
     }
 }
@@ -35,34 +54,48 @@ void Parser::match(TokenType type, const string& value) {
 
 shared_ptr<ASTNode> Parser::parse() {
     auto root = make_shared<Function>("main");
-
-    match(KEYWORD, "int");
-    match(IDENTIFIER, "main");
+    
+    match(KEYWORD, "int");  // match int keyword for function return type
+    match(IDENTIFIER, "main"); // match 'main' function name
     match(PUNCTUATION, "(");
     match(PUNCTUATION, ")");
     match(PUNCTUATION, "{");
+
+    // Create a symbol table to track declared variables
+    unordered_set<string> declared_variables;
 
     while (current_token.type != PUNCTUATION || current_token.value != "}") {
         if (current_token.type == KEYWORD && current_token.value == "int") {
             match(KEYWORD, "int");
             string var_name = current_token.value;
-            match(IDENTIFIER);
+            match(IDENTIFIER);  // get variable name
             match(OPERATOR, "=");
+            
             string expr_value;
             while (current_token.type != PUNCTUATION || current_token.value != ";") {
                 expr_value += current_token.value + " ";
                 advance();
             }
-            match(PUNCTUATION, ";");
+            match(PUNCTUATION, ";");  // expect semicolon at the end
+
+            declared_variables.insert(var_name); // mark variable as declared
 
             auto literal_node = make_shared<Literal>(expr_value);
             auto var_decl_node = make_shared<VariableDeclaration>(var_name, literal_node);
             root->add_statement(var_decl_node);
+
         } else if (current_token.type == KEYWORD && current_token.value == "return") {
             match(KEYWORD, "return");
             string return_var = current_token.value;
             match(IDENTIFIER);
-            match(PUNCTUATION, ";");
+
+            // Check if variable used in return is declared
+            if (declared_variables.find(return_var) == declared_variables.end()) {
+                cerr << "Semantic error: Variable '" << return_var << "' used before declaration." << endl;
+                exit(1);
+            }
+
+            match(PUNCTUATION, ";");  // expect semicolon at the end
 
             auto return_node = make_shared<ReturnStatement>(return_var);
             root->add_statement(return_node);
@@ -72,9 +105,10 @@ shared_ptr<ASTNode> Parser::parse() {
         }
     }
 
-    match(PUNCTUATION, "}");
+    match(PUNCTUATION, "}");  // closing brace
     return root;
 }
+
 
 void Parser::parse_statement() {
     if (current_token.type == KEYWORD && current_token.value == "int") {

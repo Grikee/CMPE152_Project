@@ -9,22 +9,10 @@
 #include "semantic.h"
 #include "codegen.h"
 #include "error.h"
+#include "utils.h"
 
 using namespace std;
 
-//1
-//token_type_to_string, lexer_test
-string token_type_to_string(TokenType type){
-  switch (type) {
-    case KEYWORD: return "KEYWORD";
-    case IDENTIFIER: return "IDENTIFIER";
-    case OPERATOR: return "OPERATOR";
-    case NUMBER: return "NUMBER";
-    case PUNCTUATION: return "PUNCTUATION";
-    case EOF_TOKEN: return "EOF";
-    default: return "UNKNOWN";
-  }
-}
 
 int main(int argc, char* argv[]){
   //check if a file is provided
@@ -80,22 +68,22 @@ int main(int argc, char* argv[]){
     }
   }
 
-// Check for semantic errors
-if (semanticAnalyzer.hasErrors()) {
-  semanticAnalyzer.printSemanticErrors();
-  return 1;
-}
+  // Check for semantic errors
+  if (semanticAnalyzer.hasErrors()) {
+    semanticAnalyzer.printSemanticErrors();
+    return 1;
+  }
 
-// Code Generation
-cout << "Generating code..." << endl;
-generateCode(dynamic_pointer_cast<Function>(ast), "output.cpp");
-cout << "Code generated successfully in 'output.cpp'." << endl;
+  // Code Generation
+  cout << "Generating code..." << endl;
+  generateCode(dynamic_pointer_cast<Function>(ast), "output.txt");
+  cout << "Code generated successfully in 'output.txt'." << endl;
 
 // Print all errors if any
-if (hasErrors()) {
-  printAllErrors();
-  return 1;
-}
+  if (hasErrors()) {
+    printAllErrors();
+    return 1;
+  } 
 
   return 0;
 }

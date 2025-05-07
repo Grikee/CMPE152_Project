@@ -1,0 +1,10 @@
+int main() {
+  int x = 10;
+  int y = 5;
+  int z = 30;
+  int a = 35;
+  int b = 100;
+  int c = 180;
+  return c;
+}
+
