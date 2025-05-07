@@ -53,7 +53,6 @@ int main(int argc, char* argv[]){
   //Debugging
   // ast->print();
 
-  // Semantic Analysis   
   SemanticAnalyzer semanticAnalyzer;
   semanticAnalyzer.declareVariable("main", "int");
   if (auto func = dynamic_pointer_cast<Function>(ast)) {
@@ -77,13 +76,14 @@ int main(int argc, char* argv[]){
   // Code Generation
   cout << "Generating code..." << endl;
   generateCode(dynamic_pointer_cast<Function>(ast), "output.txt");
-  cout << "Code generated successfully in 'output.txt'." << endl;
+  cout << "Code generated successfully in 'output.cpp'." << endl;
 
 // Print all errors if any
   if (hasErrors()) {
     printAllErrors();
     return 1;
-  } 
+  }
+
 
   return 0;
 }

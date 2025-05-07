@@ -1,5 +1,6 @@
 #include "codegen.h"
 #include <fstream>
+#include <sstream>
 #include <iostream>
 #include <memory>
 #include <string>
@@ -42,11 +43,36 @@ static void generateStatement(const shared_ptr<ASTNode>& stmt, ofstream& out) {
     }
 }
 
-// Get the value from a Literal node (assumes decl->value is a Literal)
+
+#include <sstream>
+
 static string evaluateLiteral(const shared_ptr<ASTNode>& node) {
     if (auto lit = dynamic_pointer_cast<Literal>(node)) {
         return lit->value;
     }
-    return "0";  // fallback for non-literals (could expand this later)
+    else if (auto bin = dynamic_pointer_cast<BinaryExpression>(node)) {
+        string lhsStr = evaluateLiteral(bin->lhs);
+        string rhsStr = evaluateLiteral(bin->rhs);
+
+        
+        try {
+            int lhs = stoi(lhsStr);
+            int rhs = stoi(rhsStr);
+            int result = 0;
+
+            if (bin->op == "+") result = lhs + rhs;
+            else if (bin->op == "-") result = lhs - rhs;
+            else if (bin->op == "*") result = lhs * rhs;
+            else if (bin->op == "/") result = rhs != 0 ? lhs / rhs : 0;
+
+            return to_string(result);
+        }
+        catch (...) {
+            
+            return lhsStr + " " + bin->op + " " + rhsStr;
+        }
+    }
+
+    return "0";  
 }
 

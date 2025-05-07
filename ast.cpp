@@ -47,3 +47,17 @@ void Function::print(int indent) const {
         stmt->print(indent + 1);
     }
 }
+
+// ----- BinaryExpression -----
+BinaryExpression::BinaryExpression(const string& op,
+    shared_ptr<ASTNode> lhs,
+    shared_ptr<ASTNode> rhs)
+: op(op), lhs(std::move(lhs)), rhs(std::move(rhs)) {}
+
+void BinaryExpression::print(int indent) const {
+print_indent(indent);
+cout << "BinaryExpression: " << op << endl;
+lhs->print(indent + 1);
+rhs->print(indent + 1);
+}
+

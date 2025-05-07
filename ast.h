@@ -27,6 +27,18 @@ public:
     void print(int indent = 0) const override;
 };
 
+
+class BinaryExpression : public ASTNode {
+    public:
+        string op;  // "+", "-", "*", "/"
+        shared_ptr<ASTNode> lhs;
+        shared_ptr<ASTNode> rhs;
+    
+        BinaryExpression(const string& op, shared_ptr<ASTNode> lhs, shared_ptr<ASTNode> rhs);
+        void print(int indent = 0) const override;
+    };
+    
+
 // VariableDeclaration node: represents "int x = 5;"
 class VariableDeclaration : public ASTNode {
 public:
