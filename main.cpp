@@ -50,19 +50,20 @@ int main(int argc, char* argv[]){
   vector<Token> tokens = lexer.tokenize();
 
   //Token types, lexer_test
-  //Not included included in final product, just for testing
-  for (const auto& token : tokens){
-    cout << "Type: " << token_type_to_string(token.type)
-      << ", Value: '" << token.value
-      << "', Line: " << token.line_number << endl;
-  }
+  //Debugging
+  // for (const auto& token : tokens){
+  //   cout << "Type: " << token_type_to_string(token.type)
+  //     << ", Value: '" << token.value
+  //     << "', Line: " << token.line_number << endl;
+  // }
 
   //2
   cout << "Parsing..." << endl;
   Parser parser(tokens);
   // parser.parse();
   shared_ptr<ASTNode> ast = parser.parse();
-  ast->print();
+  //Debugging
+  // ast->print();
 
   return 0;
 }
