@@ -4,13 +4,14 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include <iostream>
 
 
 using namespace std;
 
 struct VariableInfo {
    string type;
-   bool initalized;
+   bool initialized;
 };
 
 class SemanticAnalyzer {
@@ -26,6 +27,11 @@ public:
 
     void printSemanticErrors() const;
     bool hasErrors() const;
+    
+private:
+    unordered_map<string, VariableInfo> symbolTable;
+    vector<string> semanticErrors;
+
 };
 
 #endif

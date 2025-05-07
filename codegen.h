@@ -2,15 +2,11 @@
 #define CODEGEN_H
 
 #include <string>
+#include <memory>
 #include "ast.h" 
 
 
-void initCodeGen(const std::string& outputFileName);
 
-
-void finalizeCodeGen();
-
-
-void generateCode(const ProgramNode* program);
+void generateCode(const std::shared_ptr<Function>& func, const std::string& outputFileName);
 
 #endif 

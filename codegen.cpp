@@ -1,75 +1,52 @@
 #include "codegen.h"
 #include <fstream>
 #include <iostream>
+#include <memory>
+#include <string>
 
-static std::ofstream outFile;
+using namespace std;
 
-void initCodeGen(const std::string& outputFileName) {
-    outFile.open(outputFileName);
-    if (!outFile.is_open()) {
-        std::cerr << "Error: Unable to open output file: " << outputFileName << std::endl;
-        exit(1);
+// Helper functions
+static void generateStatement(const shared_ptr<ASTNode>& stmt, ofstream& out);
+static string evaluateLiteral(const shared_ptr<ASTNode>& node);
+
+// Entry point: converts the AST to simplified C++-like source
+void generateCode(const shared_ptr<Function>& func, const string& outputFileName) {
+    ofstream out(outputFileName);
+    if (!out.is_open()) {
+        cerr << "Error: Could not open output file '" << outputFileName << "'\n";
+        return;
+    }
+
+    out << "int " << func->name << "() {\n";
+
+    for (const auto& stmt : func->body) {
+        generateStatement(stmt, out);
+    }
+
+    out << "}\n";
+    out.close();
+}
+
+// Handle a single statement node
+static void generateStatement(const shared_ptr<ASTNode>& stmt, ofstream& out) {
+    if (auto decl = dynamic_pointer_cast<VariableDeclaration>(stmt)) {
+        string value = evaluateLiteral(decl->value);
+        out << "  int " << decl->name << " = " << value << ";\n";
+    }
+    else if (auto ret = dynamic_pointer_cast<ReturnStatement>(stmt)) {
+        out << "  return " << ret->return_var << ";\n";
+    }
+    else {
+        out << "  // Unknown statement\n";
     }
 }
 
-void finalizeCodeGen() {
-    if (outFile.is_open()) {
-        outFile.close();
+// Get the value from a Literal node (assumes decl->value is a Literal)
+static string evaluateLiteral(const shared_ptr<ASTNode>& node) {
+    if (auto lit = dynamic_pointer_cast<Literal>(node)) {
+        return lit->value;
     }
+    return "0";  // fallback for non-literals (could expand this later)
 }
 
-void generateStatement(const StatementNode* stmt);
-void generateExpression(const ExpressionNode* expr);
-
-
-void generateCode(const ProgramNode* program) {
-    for (const auto& stmt : program->statements) {
-        generateStatement(stmt);
-    }
-}
-
-
-void generateStatement(const StatementNode* stmt) {
-    switch (stmt->type) {
-        case StatementType::Declaration:
-            outFile << stmt->variableType << " " << stmt->variableName << ";" << std::endl;
-            break;
-        case StatementType::Assignment:
-            outFile << stmt->variableName << " = ";
-            generateExpression(stmt->expression);
-            outFile << ";" << std::endl;
-            break;
-        case StatementType::Return:
-            outFile << "return ";
-            generateExpression(stmt->expression);
-            outFile << ";" << std::endl;
-            break;
-   
-        default:
-            std::cerr << "Error: Unknown statement type." << std::endl;
-            break;
-    }
-}
-
-
-void generateExpression(const ExpressionNode* expr) {
-    switch (expr->type) {
-        case ExpressionType::IntegerLiteral:
-            outFile << expr->intValue;
-            break;
-        case ExpressionType::Variable:
-            outFile << expr->variableName;
-            break;
-        case ExpressionType::BinaryOperation:
-            outFile << "(";
-            generateExpression(expr->left);
-            outFile << " " << expr->operatorSymbol << " ";
-            generateExpression(expr->right);
-            outFile << ")";
-            break;
-
-        default:
-            std::cerr << "Error: Unknown expression type." << std::endl;
-            break;
-    }
-}
