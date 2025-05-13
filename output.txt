@@ -1,17 +1,9 @@
 int main() {
-<<<<<<< HEAD
-  int x = 10;
-  int y = 5;
-  int z = 30;
-  int a = 35;
-  int b = 100;
-  int c = 180;
+  int x = 10 ;
+  int y = 5 ;
+  int z = ( x + y ) * 2 ;
+  int a = ( x * y + z ) / 2 ;
+  int b = x - y + a * 3 ;
+  int c = ( x + y ) * ( z - a ) + b / 4 ;
   return c;
 }
-
-=======
-  int x = 10 ;
-  int y = 10 - 2 * 4 / 2 ;
-  return y;
-}
->>>>>>> 9545ccd2c33f3e8657ad154f418aca6260656939

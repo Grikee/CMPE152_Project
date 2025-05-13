@@ -156,8 +156,8 @@ void Parser::parse_function_definition() {
 
 void Parser::parse_return_statement() {
     match(KEYWORD, "return");
-    match(IDENTIFIER);           // Handle the identifier that comes after return
-    match(PUNCTUATION, ";");     // End of the return statement
+    match(IDENTIFIER);
+    match(PUNCTUATION, ";");
 }
 
 

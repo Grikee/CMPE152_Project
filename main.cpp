@@ -76,14 +76,13 @@ int main(int argc, char* argv[]){
   // Code Generation
   cout << "Generating code..." << endl;
   generateCode(dynamic_pointer_cast<Function>(ast), "output.txt");
-  cout << "Code generated successfully in 'output.cpp'." << endl;
+  cout << "Code generated successfully in 'output.txt'." << endl;
 
 // Print all errors if any
   if (hasErrors()) {
     printAllErrors();
     return 1;
   }
-
 
   return 0;
 }
