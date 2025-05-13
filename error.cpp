@@ -15,13 +15,13 @@ void reportError(const std::string& message) {
 
 
 void reportSyntaxError(int line, const std::string& message) {
-    errorMessages.push_back("Syntax Error (Line " + std::to_string(line) + "): " + message);
+    errorMessages.push_back("Syntax Error: " + message + " on line " + std::to_string(line));
     ++errorCount;
 }
 
 
 void reportSemanticError(int line, const std::string& message) {
-    errorMessages.push_back("Semantic Error (Line " + std::to_string(line) + "): " + message);
+    errorMessages.push_back("Semantic Error: " + message + " on line " + std::to_string(line));
     ++errorCount;
 }
 
